@@ -1,0 +1,9 @@
+#!/bin/bash
+# Starts Debian 9.4.0 amd4 image in in fully functional mode!
+# redirect Hosts's port 2222 to guest's port 22
+# Using the new syntaxis
+# It should be on Host
+# sysctl net.ipv4.ip_forward = 1
+
+qemu-system-x86_64 -hda debian-9.4.0-amd64.qcow2 -m 256 -device e1000,netdev=net0 -netdev user,id=net0,hostfwd=tcp::2222-:22
+

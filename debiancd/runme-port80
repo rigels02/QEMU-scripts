@@ -1,0 +1,6 @@
+#!/bin/bash
+# Starts Debian 9.4.0 amd4 image in in fully functional mode!
+
+qemu-system-x86_64 -hda debian-9.4.0-amd64.qcow2 -m 256 
+-redir tcp:5555::80
+
