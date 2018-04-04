@@ -1,0 +1,39 @@
+#!/bin/sh
+#------ Virtual Network Configuration adjust as needed ------
+BRNAME="br0"
+BRADDR="10.0.0.1"
+BRCAST="10.0.0.255"
+BRNET="10.0.0.0"
+BRMASK="255.255.255.0"
+#----------------------------------------------------------
+setup_bridge()
+{
+  brctl show | grep $BRNAME > /dev/null
+
+  if [ $? -ne 0 ] ; then
+    echo "Creating Bridge $BRNAME"
+
+    brctl addbr $BRNAME
+    brctl stp $BRNAME off
+    ip addr add $BRADDR/24 broadcast $BRCAST dev $BRNAME
+    ip link set dev $BRNAME up
+
+    route add -net $BRNET netmask $BRMASK dev $BRNAME
+    # echo "1" > /proc/sys/net/ipv4/ip_forward
+     sysctl net.ipv4.ip_forward = 1
+  fi
+}
+
+setup_vif()
+{
+  # Create the tap devices
+tunctl -u raitis -t $1
+
+  brctl addif $BRNAME $1
+
+  ip link set dev $1 up
+}
+
+echo "Configuring interface $1"
+setup_bridge
+setup_vif $1

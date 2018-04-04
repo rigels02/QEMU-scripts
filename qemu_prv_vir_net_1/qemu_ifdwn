@@ -1,0 +1,31 @@
+#!/bin/sh
+#------ Virtual Network Configuration ------
+BRNAME="br0"
+BRADDR="10.0.0.1"
+BRNET="10.0.0.0"
+BRMASK="255.255.255.0"
+#-------------------------------------------
+shutdown_bridge()
+{
+  VIFS=`brctl showmacs $BRNAME | tail -n +2 | wc -l`
+
+  if [ $VIFS -eq 0 ] ; then
+    route del -net $BRNET netmask $BRMASK dev $BRNAME
+    ip link set $BRNAME down
+    brctl delbr $BRNAME
+   sysctl net.ipv4.ip_forward = 0
+  fi
+}
+
+shutdown_vif()
+{
+  ip link set $1 down
+  brctl delif $BRNAME $1
+ # Delete the tap devices
+tunctl -d $1	
+}
+echo "Taking interface $1 down"
+# Bring down the bridge
+ifconfig $BRNAME down
+shutdown_vif $1
+shutdown_bridge

@@ -1,0 +1,33 @@
+ifconfig ens3 10.0.0.5 netmask 255.255.255.0 broadcast 10.0.0.255
+
+route add default gw 10.0.0.1 # br0 ip= 10.0.0.1
+
+------------------------------------------------
+#ifconfig
+
+ens3: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.0.0.5  netmask 255.255.255.0  broadcast 10.0.0.255
+        inet6 fe80::5054:ff:fe12:3456  prefixlen 64  scopeid 0x20<link>
+        ether 52:54:00:12:34:56  txqueuelen 1000  (Ethernet)
+        RX packets 209  bytes 38107 (37.2 KiB)
+        RX errors 71  dropped 0  overruns 0  frame 71
+        TX packets 989  bytes 100744 (98.3 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1  (Local Loopback)
+        RX packets 12  bytes 1008 (1008.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 12  bytes 1008 (1008.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+#route
+
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         10.0.0.1        0.0.0.0         UG    0      0        0 ens3
+10.0.0.0        0.0.0.0         255.255.255.0   U     0      0        0 ens3
+
+raitis@debian94:~
